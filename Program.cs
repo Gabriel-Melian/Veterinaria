@@ -1,12 +1,17 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;//Api
 using Microsoft.EntityFrameworkCore;//Api
-using Veterinaria.Data;//Api
+using Microsoft.IdentityModel.Tokens;//Api
+//using System.IdentityModel.Tokens;//Api
+using System.Text;//Api
+using Veterinaria.Services;//Api
+using Veterinaria.Repositorios;//Api
+using Veterinaria.Data;
+using Veterinaria.Repositorios.API;
 
 var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
-builder.Services.AddControllersWithViews();
 
-//Configuracion de la conexion a la base de datos MySQL
+//Configuracion de la conexion a bdd MySQL
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -15,6 +20,32 @@ builder.Services.AddDbContext<AppDBContext>(options =>
         )
     )
 );
+
+//Configurar JWT para la API
+builder.Services.AddScoped<JwtService>();
+//Repositorios (Definir como se resuelve la inyeccion llegado ese momento)
+builder.Services.AddScoped<UserRepositorio>();
+//builder.Services.AddScoped<RepositorioMascota>();
+//builder.Services.AddScoped<RepositorioCliente>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();//Esto es para MVC + API (Controllers y Views)
 
 var app = builder.Build();
 
@@ -27,12 +58,18 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles();//(Habilita servir archivos desde el wwwroot)
 
 app.UseRouting();
 
+//Autenticacion y autorizacion (JWT)
+app.UseAuthentication();
 app.UseAuthorization();
+////Mapear los endpoints de los controllers, para que se puedan usar las rutas definidas en cada uno
+//(como el /api/auth/login del AuthController) y no solo las rutas del MVC tradicional (MapControllers)
+app.MapControllers();
 
+//Rutas MVC tradicionales para la web
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
