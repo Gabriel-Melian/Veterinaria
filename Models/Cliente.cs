@@ -26,7 +26,6 @@ namespace Veterinaria.Models
         [StringLength(100)]
         public string Direccion { get; set; } = string.Empty;
 
-        [Required]
-        public bool Estado { get; set; }
+        public int Estado { get; set; }
     }
 }

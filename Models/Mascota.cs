@@ -28,7 +28,7 @@ namespace Veterinaria.Models
 
         [Required]
         [Column(TypeName = "date")]//Fecha, sin hora
-        public DateTime FechaNac { get; set; }
+        public DateTime? FechaNac { get; set; }
 
         [Required]
         public SexoMascota Sexo { get; set; }
@@ -36,9 +36,8 @@ namespace Veterinaria.Models
         [Required]
         public bool Esterilizado { get; set; }
 
-        public int IdCliente { get; set; }
+        public int? IdCliente { get; set; }
 
-        [Required]
         public int Estado { get; set; }
 
         //Relacion con Cliente

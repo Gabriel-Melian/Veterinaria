@@ -25,8 +25,8 @@ builder.Services.AddDbContext<AppDBContext>(options =>
 builder.Services.AddScoped<JwtService>();
 //Repositorios (Definir como se resuelve la inyeccion llegado ese momento)
 builder.Services.AddScoped<UserRepositorio>();
-//builder.Services.AddScoped<RepositorioMascota>();
-//builder.Services.AddScoped<RepositorioCliente>();
+builder.Services.AddScoped<ClientRepositorio>();
+builder.Services.AddScoped<MascotaRepositorio>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

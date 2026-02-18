@@ -29,7 +29,7 @@ namespace Veterinaria.Controllers.API
             if (email == null) return Unauthorized("Token inválido o expirado.");
 
             var user = await _repo.GetByEmailAsync(email);
-            if (user == null) return NotFound("Propietario no encontrado.");
+            if (user == null) return NotFound("Usuario no encontrado.");
 
             return Ok(user);
         }
@@ -47,7 +47,7 @@ namespace Veterinaria.Controllers.API
 
                 var user = await _repo.GetByEmailAsync(emailToken);
                 if (user == null)
-                    return NotFound("Propietario no encontrado.");
+                    return NotFound("Usuario no encontrado.");
 
                 //Actualizar campos
                 user.Nombre = datos.Nombre ?? user.Nombre;

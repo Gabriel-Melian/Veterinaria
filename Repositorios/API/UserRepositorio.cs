@@ -27,9 +27,9 @@ namespace Veterinaria.Repositorios.API
         }
 
         //Actualizar
-        public async Task UpdateAsync(Usuario propietario)
+        public async Task UpdateAsync(Usuario usuario)
         {
-            _context.Usuarios.Update(propietario);
+            _context.Usuarios.Update(usuario);
             await _context.SaveChangesAsync();
         }
 
@@ -39,10 +39,10 @@ namespace Veterinaria.Repositorios.API
             return await _context.Usuarios.ToListAsync();
         }
 
-        //Resetear (SOLO DE TESTEO!!!!)
-        public async Task CreateAsync(Usuario propietario)
+        //Crear
+        public async Task CreateAsync(Usuario usuario)
         {
-            _context.Usuarios.Add(propietario);
+            _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
         }
 
